@@ -2,8 +2,8 @@
 const nextConfig = {
 	output: 'export',
 	trailingSlash: true,
-	basePath: process.env.NODE_ENV === 'production' ? '/rin-teaholic.github.io' : '',
-	assetPrefix: process.env.NODE_ENV === 'production' ? '/rin-teaholic.github.io' : '',
+	basePath: '',
+	assetPrefix: '',
 	images: {
 		unoptimized: true
 	}
