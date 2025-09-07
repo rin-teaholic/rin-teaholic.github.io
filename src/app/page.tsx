@@ -219,23 +219,16 @@ export default function Home() {
 								<div className="flex items-center space-x-3">
 									<EnvelopeIcon className="h-5 w-5 text-blue-400" />
 									<span>rin.teaholic@example.com</span>
-								</div>
-								<div className="flex items-center space-x-3">
-									<PhoneIcon className="h-5 w-5 text-blue-400" />
-									<span>+81-90-1234-5678</span>
-								</div>
+								</div>								
 								<div className="flex items-center space-x-3">
 									<MapPinIcon className="h-5 w-5 text-blue-400" />
-									<span>東京都渋谷区</span>
+									<span>Tokyo, Japan</span>
 								</div>
 							</div>
 							<div className="mt-8">
 								<h5 className="text-lg font-semibold mb-4">SNS</h5>
 								<div className="flex space-x-4">
-									<a href="#" className="text-gray-300 hover:text-white transition-colors">
-										Twitter
-									</a>
-									<a href="#" className="text-gray-300 hover:text-white transition-colors">
+									<a href="https://github.com/rin-teaholic" className="text-gray-300 hover:text-white transition-colors">
 										GitHub
 									</a>
 									<a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -257,7 +250,7 @@ export default function Home() {
 			{/* Footer */}
 			<footer className="bg-gray-800 text-gray-300 py-8">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-					<p>&copy; 2025 Rin Teaholic. All rights reserved.</p>
+					<p>&copy; 2025 Rin. All rights reserved.</p>
 				</div>
 			</footer>
 		</div>
