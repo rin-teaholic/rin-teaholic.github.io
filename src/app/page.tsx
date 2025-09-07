@@ -164,13 +164,13 @@ export default function Home() {
 					<div className="grid md:grid-cols-2 gap-8">
 						{projects.map((project, index) => (
 							<div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-								<div className="h-48 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
+								<div className="aspect-video bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
 									<Image
 										src={project.image}
 										alt={project.title}
-										width={200}
-										height={120}
-										className="object-contain"
+										width={800}
+										height={450}
+										className="object-contain w-full h-full"
 									/>
 								</div>
 								<div className="p-6">
