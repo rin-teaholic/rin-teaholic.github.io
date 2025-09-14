@@ -3,13 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { 
-	EnvelopeIcon, 
-	PhoneIcon, 
-	MapPinIcon,
 	CodeBracketIcon,
 	PaintBrushIcon,
-	DevicePhoneMobileIcon,
-	GlobeAltIcon
+	DevicePhoneMobileIcon
 } from '@heroicons/react/24/outline'
 import ContactForm from '@/components/contact-form'
 import Navigation from '@/components/navigation'
@@ -212,32 +208,19 @@ export default function Home() {
 						<p className="text-lg text-gray-300">プロジェクトのご相談やお仕事のご依頼はお気軽にご連絡ください</p>
 					</div>
 					<div className="grid md:grid-cols-2 gap-12">
-						{/* Contact Info */}
+						{/* SNS Links */}
 						<div>
-							<h4 className="text-xl font-semibold mb-6">連絡先情報</h4>
-							<div className="space-y-4">
-								<div className="flex items-center space-x-3">
-									<EnvelopeIcon className="h-5 w-5 text-blue-400" />
-									<span>rin.teaholic@example.com</span>
-								</div>								
-								<div className="flex items-center space-x-3">
-									<MapPinIcon className="h-5 w-5 text-blue-400" />
-									<span>Tokyo, Japan</span>
-								</div>
-							</div>
-							<div className="mt-8">
-								<h5 className="text-lg font-semibold mb-4">SNS</h5>
-								<div className="flex space-x-4">
-									<a href="https://github.com/rin-teaholic" className="text-gray-300 hover:text-white transition-colors">
-										GitHub
-									</a>
-									<a href="#" className="text-gray-300 hover:text-white transition-colors">
-										LinkedIn
-									</a>
-									<a href="#" className="text-gray-300 hover:text-white transition-colors">
-										Instagram
-									</a>
-								</div>
+							<h4 className="text-xl font-semibold mb-6">SNS</h4>
+							<div className="flex space-x-4">
+								<a href="https://github.com/rin-teaholic" className="text-gray-300 hover:text-white transition-colors">
+									GitHub
+								</a>
+								<a href="#" className="text-gray-300 hover:text-white transition-colors">
+									LinkedIn
+								</a>
+								<a href="#" className="text-gray-300 hover:text-white transition-colors">
+									Instagram
+								</a>
 							</div>
 						</div>
 
