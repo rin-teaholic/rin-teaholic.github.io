@@ -45,12 +45,12 @@ export default function Home() {
 						<div className="flex items-center space-x-4">
 							<Image
 								src="/profile-image.svg"
-								alt="Rin Teaholic"
+								alt="Rin"
 								width={50}
 								height={50}
 								className="rounded-full"
 							/>
-							<h1 className="text-2xl font-bold text-gray-900">Rin Teaholic</h1>
+							<h1 className="text-2xl font-bold text-gray-900">Rin</h1>
 						</div>
 						
 						<Navigation />
@@ -64,7 +64,7 @@ export default function Home() {
 					<div className="flex justify-center mb-8">
 						<Image
 							src="/profile-image.svg"
-							alt="Rin Teaholic"
+							alt="Rin"
 							width={150}
 							height={150}
 							className="rounded-full border-4 border-white shadow-lg"
@@ -207,11 +207,11 @@ export default function Home() {
 						<h3 className="text-3xl md:text-4xl font-bold mb-4">お問い合わせ</h3>
 						<p className="text-lg text-gray-300">プロジェクトのご相談やお仕事のご依頼はお気軽にご連絡ください</p>
 					</div>
-					<div className="grid md:grid-cols-2 gap-12">
+					<div className="space-y-12">
 						{/* SNS Links */}
-						<div>
+						<div className="text-center">
 							<h4 className="text-xl font-semibold mb-6">SNS</h4>
-							<div className="flex space-x-4">
+							<div className="flex justify-center space-x-4">
 								<a href="https://github.com/rin-teaholic" className="text-gray-300 hover:text-white transition-colors">
 									GitHub
 								</a>
@@ -225,7 +225,9 @@ export default function Home() {
 						</div>
 
 						{/* Contact Form */}
-						<ContactForm />
+						<div className="max-w-md mx-auto">
+							<ContactForm />
+						</div>
 					</div>
 				</div>
 			</section>
