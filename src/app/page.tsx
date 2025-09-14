@@ -7,6 +7,7 @@ import {
 	PaintBrushIcon,
 	DevicePhoneMobileIcon
 } from '@heroicons/react/24/outline'
+import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa'
 import ContactForm from '@/components/contact-form'
 import Navigation from '@/components/navigation'
 
@@ -205,24 +206,37 @@ export default function Home() {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-16">
 						<h3 className="text-3xl md:text-4xl font-bold mb-4">お問い合わせ</h3>
-						<p className="text-lg text-gray-300">プロジェクトのご相談やお仕事のご依頼はお気軽にご連絡ください</p>
-					</div>
-					<div className="space-y-12">
-						{/* SNS Links */}
-						<div className="text-center">
-							<h4 className="text-xl font-semibold mb-6">SNS</h4>
-							<div className="flex justify-center space-x-4">
-								<a href="https://github.com/rin-teaholic" className="text-gray-300 hover:text-white transition-colors">
-									GitHub
+						<div className="rounded-lg p-8 max-w-2xl mx-auto">
+							<p className="text-lg text-gray-300 mb-6">プロジェクトのご相談やお仕事のご依頼はお気軽にご連絡ください</p>
+							{/* SNS Links */}
+							<div className="flex justify-center space-x-6">
+								<a 
+									href="https://github.com/rin-teaholic" 
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-gray-300 hover:text-white transition-colors"
+									aria-label="GitHub"
+								>
+									<FaGithub className="h-8 w-8" />
 								</a>
-								<a href="#" className="text-gray-300 hover:text-white transition-colors">
-									LinkedIn
+								<a 
+									href="#" 
+									className="text-gray-300 hover:text-white transition-colors"
+									aria-label="LinkedIn"
+								>
+									<FaLinkedin className="h-8 w-8" />
 								</a>
-								<a href="#" className="text-gray-300 hover:text-white transition-colors">
-									Instagram
+								<a 
+									href="#" 
+									className="text-gray-300 hover:text-white transition-colors"
+									aria-label="Instagram"
+								>
+									<FaInstagram className="h-8 w-8" />
 								</a>
 							</div>
 						</div>
+					</div>
+					<div className="space-y-8">
 
 						{/* Contact Form */}
 						<div className="max-w-md mx-auto">
