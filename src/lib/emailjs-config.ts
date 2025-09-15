@@ -9,7 +9,7 @@ export const EMAILJS_CONFIG = {
 // デバッグ用：環境変数の状態を確認
 export function getEmailJSConfigStatus() {
 	const isProduction = process.env.NODE_ENV === 'production'
-	return {
+	const status = {
 		SERVICE_ID: {
 			value: EMAILJS_CONFIG.SERVICE_ID,
 			length: EMAILJS_CONFIG.SERVICE_ID?.length || 0,
@@ -29,6 +29,19 @@ export function getEmailJSConfigStatus() {
 		isProduction,
 		allSet: validateEmailJSConfig()
 	}
+	
+	// 本番環境での詳細ログ
+	if (isProduction) {
+		console.log('🔍 EmailJS設定状況:', {
+			SERVICE_ID: status.SERVICE_ID.isSet ? '✅ 設定済み' : '❌ 未設定',
+			TEMPLATE_ID: status.TEMPLATE_ID.isSet ? '✅ 設定済み' : '❌ 未設定',
+			PUBLIC_KEY: status.PUBLIC_KEY.isSet ? '✅ 設定済み' : '❌ 未設定',
+			NODE_ENV: status.NODE_ENV,
+			allSet: status.allSet ? '✅ 完全' : '❌ 不完全'
+		})
+	}
+	
+	return status
 }
 
 // メール送信の設定
