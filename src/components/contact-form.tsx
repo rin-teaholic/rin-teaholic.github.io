@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import emailjs from '@emailjs/browser'
 import { contactFormSchema, subjectOptions, type ContactFormData } from '@/lib/contact-form-schema'
-import { EMAILJS_CONFIG, EMAIL_SETTINGS } from '@/lib/emailjs-config'
+import { EMAILJS_CONFIG, EMAIL_SETTINGS, validateEmailJSConfig } from '@/lib/emailjs-config'
 
 interface ContactFormProps {
 	className?: string
@@ -15,6 +15,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | ''>('')
 	const [errorMessage, setErrorMessage] = useState('')
+	const [isEmailJSReady, setIsEmailJSReady] = useState(false)
 
 	const {
 		register,
@@ -25,6 +26,14 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 		resolver: zodResolver(contactFormSchema)
 	})
 
+	// EmailJSの初期化
+	useEffect(() => {
+		if (EMAILJS_CONFIG.PUBLIC_KEY) {
+			emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY)
+			setIsEmailJSReady(true)
+		}
+	}, [])
+
 	const onSubmit = async (data: ContactFormData) => {
 		setIsSubmitting(true)
 		setSubmitStatus('')
@@ -32,8 +41,13 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 
 		try {
 			// EmailJS設定の確認
-			if (!EMAILJS_CONFIG.SERVICE_ID || !EMAILJS_CONFIG.TEMPLATE_ID || !EMAILJS_CONFIG.PUBLIC_KEY) {
+			if (!validateEmailJSConfig()) {
 				throw new Error('EmailJS設定が不完全です。管理者にお問い合わせください。')
+			}
+
+			// EmailJSの初期化確認
+			if (!isEmailJSReady) {
+				throw new Error('EmailJSの初期化が完了していません。しばらく待ってから再度お試しください。')
 			}
 
 			// EmailJSでメール送信
@@ -49,8 +63,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 			const result = await emailjs.send(
 				EMAILJS_CONFIG.SERVICE_ID,
 				EMAILJS_CONFIG.TEMPLATE_ID,
-				templateParams,
-				EMAILJS_CONFIG.PUBLIC_KEY
+				templateParams
 			)
 
 			if (result.status === 200) {
@@ -72,12 +85,18 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 			if (error instanceof Error) {
 				if (error.message.includes('EmailJS設定が不完全')) {
 					setErrorMessage(error.message)
-				} else if (error.message.includes('network')) {
-					setErrorMessage('ネットワークエラーが発生しました。インターネット接続を確認してください。')
+				} else if (error.message.includes('EmailJSの初期化が完了していません')) {
+					setErrorMessage(error.message)
 				} else if (error.message.includes('Invalid template')) {
 					setErrorMessage('メールテンプレートの設定に問題があります。管理者にお問い合わせください。')
 				} else if (error.message.includes('Invalid service')) {
 					setErrorMessage('メールサービスの設定に問題があります。管理者にお問い合わせください。')
+				} else if (error.message.includes('Invalid public key')) {
+					setErrorMessage('EmailJSの公開キーが無効です。管理者にお問い合わせください。')
+				} else if (error.message.includes('Quota exceeded')) {
+					setErrorMessage('メール送信の制限に達しました。しばらく時間をおいて再度お試しください。')
+				} else if (error.message.includes('network') || error.message.includes('fetch')) {
+					setErrorMessage('ネットワークエラーが発生しました。インターネット接続を確認してください。')
 				} else {
 					setErrorMessage(`エラーが発生しました: ${error.message}`)
 				}
@@ -159,10 +178,10 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 				</div>
 				<button
 					type="submit"
-					disabled={isSubmitting}
+					disabled={isSubmitting || !isEmailJSReady}
 					className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 				>
-					{isSubmitting ? '送信中...' : '送信する'}
+					{isSubmitting ? '送信中...' : !isEmailJSReady ? '初期化中...' : '送信する'}
 				</button>
 			</form>
 		</div>
