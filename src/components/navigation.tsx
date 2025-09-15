@@ -1,10 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 export default function Navigation() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+	// モバイルメニュー開閉時にボディのスクロールを制御
+	useEffect(() => {
+		if (isMenuOpen) {
+			document.body.style.overflow = 'hidden'
+		} else {
+			document.body.style.overflow = 'unset'
+		}
+
+		// クリーンアップ関数
+		return () => {
+			document.body.style.overflow = 'unset'
+		}
+	}, [isMenuOpen])
 
 	return (
 		<>
@@ -35,7 +49,7 @@ export default function Navigation() {
 				<div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-50">
 					<div className="flex flex-col h-full">
 						{/* Header with close button */}
-						<div className="flex justify-between items-center p-4 border-b border-gray-200">
+						<div className="flex justify-between items-center p-4 pt-20 border-b border-gray-200">
 							<h2 className="text-lg font-semibold text-gray-900">メニュー</h2>
 							<button
 								onClick={() => setIsMenuOpen(false)}

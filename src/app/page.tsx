@@ -40,7 +40,7 @@ export default function Home() {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
 			{/* Header */}
-			<header className="bg-white shadow-sm relative">
+			<header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-40">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center py-6">
 						<div className="flex items-center space-x-4">
@@ -62,7 +62,7 @@ export default function Home() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+			<section className="pt-32 pb-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 					<div className="flex justify-center mb-8">
 						<Image
