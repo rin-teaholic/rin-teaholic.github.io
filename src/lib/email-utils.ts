@@ -17,7 +17,7 @@ export function getEmailConfig(): EmailConfig {
 
 	// 必須環境変数のチェック
 	if (!config.auth.user || !config.auth.pass) {
-		throw new Error('SMTP_USER または SMTP_PASS が設定されていません')
+		throw new Error('SMTP認証情報が設定されていません。環境変数SMTP_USERとSMTP_PASSを設定してください。')
 	}
 
 	return config

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 		if (!contactEmail) {
 			console.error('CONTACT_EMAIL environment variable is not set')
 			return NextResponse.json(
-				{ error: 'サーバー設定エラーが発生しました' },
+				{ error: 'お問い合わせメールの送信先が設定されていません。管理者にお問い合わせください。' },
 				{ status: 500 }
 			)
 		}
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		// メール送信エラーの場合
-		if (error instanceof Error && error.message.includes('SMTP')) {
+		if (error instanceof Error && (error.message.includes('SMTP') || error.message.includes('認証情報'))) {
 			return NextResponse.json(
 				{ error: 'メール送信設定に問題があります。管理者にお問い合わせください。' },
 				{ status: 500 }

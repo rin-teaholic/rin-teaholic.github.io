@@ -1,86 +1,68 @@
-# 環境変数の設定
+# 環境変数設定ガイド
 
-プロジェクトを実行する前に、`.env.local`ファイルを作成して以下の環境変数を設定してください：
+## お問い合わせフォームの設定
+
+お問い合わせフォームを正常に動作させるために、以下の環境変数を設定してください。
+
+### 必要な環境変数
+
+プロジェクトのルートディレクトリに `.env.local` ファイルを作成し、以下の内容を設定してください：
 
 ```bash
-# お問い合わせフォームの送信先メールアドレス
-CONTACT_EMAIL=rin.teaholic@gmail.com
-
-# SMTP設定（Gmailの場合）
+# SMTP設定（Gmailを使用する場合の例）
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 
-# Next.jsの環境変数
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+# お問い合わせメールの送信先
+CONTACT_EMAIL=your-contact-email@gmail.com
 ```
 
-## Gmailでの設定方法
+### Gmailを使用する場合の設定手順
 
-### 1. アプリパスワードの作成
-1. Googleアカウントの設定にアクセス
-2. 「セキュリティ」→「2段階認証プロセス」を有効化
-3. 「アプリパスワード」で新しいパスワードを生成
-4. 生成されたパスワードを`SMTP_PASS`に設定
+1. **Gmailアカウントで2段階認証を有効にする**
+2. **アプリパスワードを生成する**
+   - Googleアカウント設定 → セキュリティ → 2段階認証プロセス → アプリパスワード
+   - 「メール」を選択してパスワードを生成
+3. **環境変数を設定する**
+   - `SMTP_USER`: あなたのGmailアドレス
+   - `SMTP_PASS`: 生成したアプリパスワード
+   - `CONTACT_EMAIL`: お問い合わせメールの送信先アドレス
 
-### 2. 環境変数の設定例
-```bash
-# Gmailを使用する場合
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=rin.teaholic@gmail.com
-SMTP_PASS=your-16-character-app-password
-```
+### その他のメールサービス
 
-## その他のメールサービス
-
-### Outlook/Hotmail
+#### Outlook/Hotmail
 ```bash
 SMTP_HOST=smtp-mail.outlook.com
 SMTP_PORT=587
 SMTP_SECURE=false
 ```
 
-### Yahoo Mail
+#### Yahoo Mail
 ```bash
 SMTP_HOST=smtp.mail.yahoo.com
 SMTP_PORT=587
 SMTP_SECURE=false
 ```
 
-### SendGrid
+### 設定後の確認
+
+環境変数を設定した後、開発サーバーを再起動してください：
+
 ```bash
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=apikey
-SMTP_PASS=your-sendgrid-api-key
+npm run dev
 ```
 
-## セキュリティについて
+### トラブルシューティング
 
-- `.env.local`ファイルは`.gitignore`に含まれており、Gitリポジトリにはコミットされません
-- メールアドレスとSMTP認証情報は環境変数として管理され、コード内に直接記載されていません
-- 本番環境では、専用のメール送信サービス（SendGrid、Mailgun等）の使用を推奨します
-- アプリパスワードを使用してアカウントのセキュリティを向上させます
+- **「SMTP認証情報が設定されていません」エラー**: 環境変数が正しく設定されているか確認してください
+- **「お問い合わせメールの送信先が設定されていません」エラー**: `CONTACT_EMAIL`が設定されているか確認してください
+- **メール送信エラー**: SMTP設定とアプリパスワードが正しいか確認してください
 
-## お問い合わせフォームの機能
+### セキュリティ注意事項
 
-- **実際のメール送信**: Nodemailerを使用したSMTP経由でのメール送信
-- **HTMLメール**: 美しいHTMLテンプレートでのメール送信
-- **バリデーション**: Zodを使用した厳密な入力値検証
-- **エラーハンドリング**: 適切なエラーメッセージの表示
-- **レスポンシブデザイン**: モバイルファーストのデザイン
-- **アクセシビリティ**: 適切なラベルとエラー表示
-- **型安全性**: TypeScriptによる型チェック
-
-## トラブルシューティング
-
-### メール送信エラーが発生する場合
-1. SMTP設定が正しいか確認
-2. アプリパスワードが正しく設定されているか確認
-3. 2段階認証が有効になっているか確認
-4. ファイアウォールでSMTPポートがブロックされていないか確認
+- `.env.local`ファイルはGitにコミットしないでください
+- アプリパスワードは定期的に更新することを推奨します
+- 本番環境では、環境変数を適切に管理してください
