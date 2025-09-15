@@ -162,7 +162,7 @@ function escapeHtml(text: string): string {
 export async function sendEmail(emailData: EmailData): Promise<void> {
 	const config = getEmailConfig()
 	
-	const transporter = nodemailer.createTransporter(config)
+	const transporter = nodemailer.createTransport(config)
 	
 	// 接続テスト
 	await transporter.verify()
