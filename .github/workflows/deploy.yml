@@ -42,11 +42,27 @@ jobs:
           
       - name: Verify Environment Variables
         run: |
-          echo "環境変数の確認:"
-          echo "NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${NEXT_PUBLIC_EMAILJS_SERVICE_ID:+設定済み}"
-          echo "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID:+設定済み}"
-          echo "NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY:+設定済み}"
-          echo "NEXT_PUBLIC_TO_EMAIL: ${NEXT_PUBLIC_TO_EMAIL:+設定済み}"
+          echo "🔍 環境変数の確認:"
+          echo "NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${NEXT_PUBLIC_EMAILJS_SERVICE_ID:+✅ 設定済み}"
+          echo "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID:+✅ 設定済み}"
+          echo "NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY:+✅ 設定済み}"
+          echo "NEXT_PUBLIC_TO_EMAIL: ${NEXT_PUBLIC_TO_EMAIL:+✅ 設定済み}"
+          
+          # 未設定の変数をチェック
+          missing_vars=()
+          [ -z "$NEXT_PUBLIC_EMAILJS_SERVICE_ID" ] && missing_vars+=("NEXT_PUBLIC_EMAILJS_SERVICE_ID")
+          [ -z "$NEXT_PUBLIC_EMAILJS_TEMPLATE_ID" ] && missing_vars+=("NEXT_PUBLIC_EMAILJS_TEMPLATE_ID")
+          [ -z "$NEXT_PUBLIC_EMAILJS_PUBLIC_KEY" ] && missing_vars+=("NEXT_PUBLIC_EMAILJS_PUBLIC_KEY")
+          [ -z "$NEXT_PUBLIC_TO_EMAIL" ] && missing_vars+=("NEXT_PUBLIC_TO_EMAIL")
+          
+          if [ ${#missing_vars[@]} -gt 0 ]; then
+            echo "❌ 以下の環境変数が設定されていません:"
+            printf '%s\n' "${missing_vars[@]}"
+            echo "GitHub Secretsの設定を確認してください。"
+            exit 1
+          else
+            echo "✅ すべての環境変数が正しく設定されています"
+          fi
         env:
           NODE_ENV: production
           NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
