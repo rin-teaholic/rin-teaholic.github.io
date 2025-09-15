@@ -1,44 +1,62 @@
 'use client'
 
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { contactFormSchema, subjectOptions, type ContactFormData } from '@/lib/contact-form-schema'
 
 interface ContactFormProps {
 	className?: string
 }
 
 export default function ContactForm({ className = '' }: ContactFormProps) {
-	const [formData, setFormData] = useState({
-		name: '',
-		email: '',
-		subject: '',
-		message: ''
-	})
 	const [isSubmitting, setIsSubmitting] = useState(false)
-	const [submitStatus, setSubmitStatus] = useState('')
+	const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | ''>('')
+	const [errorMessage, setErrorMessage] = useState('')
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-		const { name, value } = e.target
-		setFormData(prev => ({
-			...prev,
-			[name]: value
-		}))
-	}
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset
+	} = useForm<ContactFormData>({
+		resolver: zodResolver(contactFormSchema)
+	})
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
+	const onSubmit = async (data: ContactFormData) => {
 		setIsSubmitting(true)
-		
-		// フォーム送信のシミュレーション
-		setTimeout(() => {
+		setSubmitStatus('')
+		setErrorMessage('')
+
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+
+			const result = await response.json()
+
+			if (response.ok) {
+				setSubmitStatus('success')
+				reset()
+				// 3秒後にステータスをリセット
+				setTimeout(() => {
+					setSubmitStatus('')
+				}, 3000)
+			} else {
+				setSubmitStatus('error')
+				setErrorMessage(result.error || '送信に失敗しました')
+			}
+		} catch (error) {
+			console.error('お問い合わせフォーム送信エラー:', error)
+			setSubmitStatus('error')
+			setErrorMessage('ネットワークエラーが発生しました。しばらく時間をおいて再度お試しください。')
+		} finally {
 			setIsSubmitting(false)
-			setSubmitStatus('success')
-			setFormData({ name: '', email: '', subject: '', message: '' })
-			
-			// 3秒後にステータスをリセット
-			setTimeout(() => {
-				setSubmitStatus('')
-			}, 3000)
-		}, 1000)
+		}
 	}
 
 	return (
@@ -49,58 +67,65 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 					メッセージを送信しました。ありがとうございます！
 				</div>
 			)}
-			<form onSubmit={handleSubmit} className="space-y-4">
+			{submitStatus === 'error' && (
+				<div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+					{errorMessage}
+				</div>
+			)}
+			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 				<div>
 					<label htmlFor="name" className="block text-sm font-medium mb-2">お名前</label>
 					<input
 						type="text"
 						id="name"
-						name="name"
-						value={formData.name}
-						onChange={handleInputChange}
+						{...register('name')}
 						className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-						required
 					/>
+					{errors.name && (
+						<p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
+					)}
 				</div>
 				<div>
 					<label htmlFor="email" className="block text-sm font-medium mb-2">メールアドレス</label>
 					<input
 						type="email"
 						id="email"
-						name="email"
-						value={formData.email}
-						onChange={handleInputChange}
+						{...register('email')}
 						className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-						required
 					/>
+					{errors.email && (
+						<p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+					)}
 				</div>
 				<div>
 					<label htmlFor="subject" className="block text-sm font-medium mb-2">件名</label>
 					<select
 						id="subject"
-						name="subject"
-						value={formData.subject}
-						onChange={handleInputChange}
+						{...register('subject')}
 						className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 					>
 						<option value="">選択してください</option>
-						<option value="project">プロジェクトのご相談</option>
-						<option value="collaboration">コラボレーション</option>
-						<option value="job">お仕事のご依頼</option>
-						<option value="other">その他</option>
+						{subjectOptions.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
 					</select>
+					{errors.subject && (
+						<p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
+					)}
 				</div>
 				<div>
 					<label htmlFor="message" className="block text-sm font-medium mb-2">メッセージ</label>
 					<textarea
 						id="message"
-						name="message"
 						rows={4}
-						value={formData.message}
-						onChange={handleInputChange}
+						{...register('message')}
 						className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-						required
 					></textarea>
+					{errors.message && (
+						<p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
+					)}
 				</div>
 				<button
 					type="submit"
