@@ -32,37 +32,51 @@ export default function Navigation() {
 
 			{/* Mobile Navigation - 全幅で表示 */}
 			{isMenuOpen && (
-				<div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
-					<nav className="flex flex-col space-y-0">
-						<a 
-							href="#about" 
-							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-							onClick={() => setIsMenuOpen(false)}
-						>
-							About
-						</a>
-						<a 
-							href="#projects" 
-							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-							onClick={() => setIsMenuOpen(false)}
-						>
-							Projects
-						</a>
-						<a 
-							href="#skills" 
-							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-							onClick={() => setIsMenuOpen(false)}
-						>
-							Skills
-						</a>
-						<a 
-							href="#contact" 
-							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4"
-							onClick={() => setIsMenuOpen(false)}
-						>
-							Contact
-						</a>
-					</nav>
+				<div className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-50">
+					<div className="flex flex-col h-full">
+						{/* Header with close button */}
+						<div className="flex justify-between items-center p-4 border-b border-gray-200">
+							<h2 className="text-lg font-semibold text-gray-900">メニュー</h2>
+							<button
+								onClick={() => setIsMenuOpen(false)}
+								className="text-gray-600 hover:text-gray-900"
+							>
+								<XMarkIcon className="h-6 w-6" />
+							</button>
+						</div>
+						
+						{/* Navigation links */}
+						<nav className="flex flex-col flex-1">
+							<a 
+								href="#about" 
+								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
+								onClick={() => setIsMenuOpen(false)}
+							>
+								About
+							</a>
+							<a 
+								href="#projects" 
+								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
+								onClick={() => setIsMenuOpen(false)}
+							>
+								Projects
+							</a>
+							<a 
+								href="#skills" 
+								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
+								onClick={() => setIsMenuOpen(false)}
+							>
+								Skills
+							</a>
+							<a 
+								href="#contact" 
+								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4"
+								onClick={() => setIsMenuOpen(false)}
+							>
+								Contact
+							</a>
+						</nav>
+					</div>
 				</div>
 			)}
 		</>
