@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import emailjs from '@emailjs/browser'
 import { contactFormSchema, subjectOptions, type ContactFormData } from '@/lib/contact-form-schema'
+import { EMAILJS_CONFIG, EMAIL_SETTINGS } from '@/lib/emailjs-config'
 
 interface ContactFormProps {
 	className?: string
@@ -29,17 +31,29 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 		setErrorMessage('')
 
 		try {
-			const response = await fetch('/api/contact', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			// EmailJS設定の確認
+			if (!EMAILJS_CONFIG.SERVICE_ID || !EMAILJS_CONFIG.TEMPLATE_ID || !EMAILJS_CONFIG.PUBLIC_KEY) {
+				throw new Error('EmailJS設定が不完全です。管理者にお問い合わせください。')
+			}
 
-			const result = await response.json()
+			// EmailJSでメール送信
+			const templateParams = {
+				to_email: EMAIL_SETTINGS.TO_EMAIL,
+				from_name: data.name,
+				from_email: data.email,
+				subject: `${EMAIL_SETTINGS.SUBJECT_PREFIX} ${subjectOptions.find(opt => opt.value === data.subject)?.label || data.subject}`,
+				message: data.message,
+				reply_to: data.email
+			}
 
-			if (response.ok) {
+			const result = await emailjs.send(
+				EMAILJS_CONFIG.SERVICE_ID,
+				EMAILJS_CONFIG.TEMPLATE_ID,
+				templateParams,
+				EMAILJS_CONFIG.PUBLIC_KEY
+			)
+
+			if (result.status === 200) {
 				setSubmitStatus('success')
 				reset()
 				// 3秒後にステータスをリセット
@@ -48,19 +62,27 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 				}, 3000)
 			} else {
 				setSubmitStatus('error')
-				setErrorMessage(result.error || '送信に失敗しました')
+				setErrorMessage('メール送信に失敗しました。しばらく時間をおいて再度お試しください。')
 			}
 		} catch (error) {
 			console.error('お問い合わせフォーム送信エラー:', error)
 			setSubmitStatus('error')
 			
 			// より詳細なエラーメッセージを提供
-			if (error instanceof TypeError && error.message.includes('fetch')) {
-				setErrorMessage('ネットワークエラーが発生しました。インターネット接続を確認してください。')
-			} else if (error instanceof Error) {
-				setErrorMessage(`エラーが発生しました: ${error.message}`)
+			if (error instanceof Error) {
+				if (error.message.includes('EmailJS設定が不完全')) {
+					setErrorMessage(error.message)
+				} else if (error.message.includes('network')) {
+					setErrorMessage('ネットワークエラーが発生しました。インターネット接続を確認してください。')
+				} else if (error.message.includes('Invalid template')) {
+					setErrorMessage('メールテンプレートの設定に問題があります。管理者にお問い合わせください。')
+				} else if (error.message.includes('Invalid service')) {
+					setErrorMessage('メールサービスの設定に問題があります。管理者にお問い合わせください。')
+				} else {
+					setErrorMessage(`エラーが発生しました: ${error.message}`)
+				}
 			} else {
-				setErrorMessage('ネットワークエラーが発生しました。しばらく時間をおいて再度お試しください。')
+				setErrorMessage('メール送信に失敗しました。しばらく時間をおいて再度お試しください。')
 			}
 		} finally {
 			setIsSubmitting(false)

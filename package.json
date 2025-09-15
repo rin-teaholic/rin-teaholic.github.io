@@ -10,6 +10,7 @@
 		"export": "next build && next export"
 	},
 	"dependencies": {
+		"@emailjs/browser": "^4.4.1",
 		"@heroicons/react": "^2.2.0",
 		"@hookform/resolvers": "^5.2.1",
 		"@types/nodemailer": "^7.0.1",
