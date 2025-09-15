@@ -30,34 +30,34 @@ export default function Navigation() {
 				</button>
 			</div>
 
-			{/* Mobile Navigation */}
+			{/* Mobile Navigation - 全幅で表示 */}
 			{isMenuOpen && (
-				<div className="md:hidden pb-4">
-					<nav className="flex flex-col space-y-2">
+				<div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+					<nav className="flex flex-col space-y-0">
 						<a 
 							href="#about" 
-							className="text-gray-600 hover:text-gray-900 py-2"
+							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
 							onClick={() => setIsMenuOpen(false)}
 						>
 							About
 						</a>
 						<a 
 							href="#projects" 
-							className="text-gray-600 hover:text-gray-900 py-2"
+							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Projects
 						</a>
 						<a 
 							href="#skills" 
-							className="text-gray-600 hover:text-gray-900 py-2"
+							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Skills
 						</a>
 						<a 
 							href="#contact" 
-							className="text-gray-600 hover:text-gray-900 py-2"
+							className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4"
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Contact
