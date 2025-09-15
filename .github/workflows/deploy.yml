@@ -6,12 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
-# 環境の設定
-environment: production
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
     - name: Checkout
