@@ -1,12 +1,12 @@
-# GitHub Secrets設定ガイド
+# GitHub環境シークレット設定ガイド
 
 ## 概要
 
-このプロジェクトでは、EmailJSを使用してお問い合わせフォームを実装しています。GitHub Pagesにデプロイする際に、EmailJSの設定値をGitHub Secretsとして設定する必要があります。
+このプロジェクトでは、EmailJSを使用してお問い合わせフォームを実装しています。GitHub Pagesにデプロイする際に、EmailJSの設定値をGitHub環境シークレットとして設定する必要があります。
 
-## 必要なSecrets
+## 必要な環境シークレット
 
-以下の4つのSecretsをGitHubリポジトリに設定してください：
+以下の4つの環境シークレットをGitHubリポジトリの`production`環境に設定してください：
 
 ### 1. NEXT_PUBLIC_EMAILJS_SERVICE_ID
 - **説明**: EmailJSのサービスID
@@ -30,19 +30,26 @@
 1. リポジトリのページに移動
 2. 「Settings」タブをクリック
 
-### 2. Secrets and variables → Actions
-1. 左サイドバーの「Secrets and variables」をクリック
-2. 「Actions」をクリック
+### 2. Environments
+1. 左サイドバーの「Environments」をクリック
+2. 「New environment」をクリック
+3. 環境名に `production` を入力して「Configure environment」をクリック
 
-### 3. 新しいSecretsを追加
-1. 「New repository secret」ボタンをクリック
-2. 上記の4つのSecretsをそれぞれ追加：
+### 3. 環境シークレットを追加
+1. 「Environment secrets」セクションで「Add secret」ボタンをクリック
+2. 上記の4つのシークレットをそれぞれ追加：
    - Name: `NEXT_PUBLIC_EMAILJS_SERVICE_ID`
    - Secret: EmailJSのサービスID
    - 「Add secret」をクリック
 
-### 4. すべてのSecretsを追加
-同様の手順で残りの3つのSecretsも追加してください。
+### 4. すべてのシークレットを追加
+同様の手順で残りの3つのシークレットも追加してください。
+
+### 5. 環境保護ルール（オプション）
+必要に応じて以下の保護ルールを設定できます：
+- **Required reviewers**: 環境へのデプロイ前に承認が必要
+- **Wait timer**: デプロイ前の待機時間
+- **Deployment branches**: 特定のブランチからのみデプロイを許可
 
 ## 設定確認
 
@@ -73,8 +80,9 @@
    - EmailJSダッシュボードから正しい値をコピーしているか確認
    - 余分なスペースや改行が含まれていないか確認
 
-3. **ワークフローファイルを確認**
-   - `.github/workflows/deploy.yml` でSecretsが正しく参照されているか確認
+### 3. ワークフローファイルを確認
+- `.github/workflows/deploy.yml` で環境シークレットが正しく参照されているか確認
+- `environment: production` が設定されているか確認
 
 4. **キャッシュをクリア**
    - GitHub Actionsのキャッシュをクリアして再実行
@@ -97,13 +105,26 @@
 - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` の値が正しいか確認
 - EmailJSテンプレートが有効になっているか確認
 
+## 環境シークレット vs リポジトリシークレット
+
+### 環境シークレットの利点
+- **環境別の管理**: 本番環境とステージング環境で異なる設定値を使用可能
+- **保護ルール**: 環境ごとに承認プロセスやブランチ制限を設定可能
+- **監査ログ**: 環境へのアクセス履歴を追跡可能
+- **権限管理**: 環境ごとに異なるアクセス権限を設定可能
+
+### リポジトリシークレットとの違い
+- **リポジトリシークレット**: リポジトリ全体で共有されるシークレット
+- **環境シークレット**: 特定の環境でのみ使用されるシークレット
+
 ## セキュリティ注意事項
 
-- Secretsの値は絶対に公開しないでください
-- 定期的にSecretsを更新することを推奨します
-- 不要になったSecretsは削除してください
+- 環境シークレットの値は絶対に公開しないでください
+- 定期的にシークレットを更新することを推奨します
+- 不要になったシークレットは削除してください
+- 環境保護ルールを適切に設定してセキュリティを強化してください
 
 ## 参考リンク
 
 - [EmailJS公式ドキュメント](https://www.emailjs.com/docs/)
-- [GitHub Secrets公式ドキュメント](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+- [GitHub環境シークレット公式ドキュメント](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
