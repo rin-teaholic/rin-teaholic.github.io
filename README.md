@@ -30,12 +30,37 @@ cd rin-teaholic.github.io
 npm install
 ```
 
-3. 開発サーバーを起動
+3. 環境変数を設定（お問い合わせフォームを使用する場合）
+```bash
+# .env.local ファイルを作成
+cp .env.example .env.local
+```
+
+`.env.local` ファイルに以下の環境変数を設定してください：
+
+```env
+# お問い合わせフォーム設定
+CONTACT_EMAIL=your-email@example.com
+
+# SMTP設定（Gmailの場合）
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-gmail@gmail.com
+SMTP_PASS=your-app-password
+```
+
+**Gmailを使用する場合の注意事項:**
+- 2段階認証を有効にしてください
+- アプリパスワードを生成して `SMTP_PASS` に設定してください
+- 通常のパスワードではなく、アプリパスワードを使用する必要があります
+
+4. 開発サーバーを起動
 ```bash
 npm run dev
 ```
 
-4. ブラウザで `http://localhost:3000` を開く
+5. ブラウザで `http://localhost:3000` を開く
 
 ## ビルドとデプロイ
 
@@ -87,6 +112,36 @@ src/
     ├── cafe-serenity-preview.svg
     └── kaikei-biz-preview.svg
 ```
+
+## トラブルシューティング
+
+### お問い合わせフォームのエラー
+
+**ネットワークエラーが発生する場合:**
+
+1. **環境変数の確認**
+   - `.env.local` ファイルが正しく設定されているか確認
+   - `CONTACT_EMAIL`、`SMTP_USER`、`SMTP_PASS` が設定されているか確認
+
+2. **Gmail設定の確認**
+   - 2段階認証が有効になっているか確認
+   - アプリパスワードが正しく生成されているか確認
+   - 通常のパスワードではなく、アプリパスワードを使用しているか確認
+
+3. **SMTP設定の確認**
+   - `SMTP_HOST`、`SMTP_PORT`、`SMTP_SECURE` が正しく設定されているか確認
+   - ファイアウォールやプロキシがSMTP接続をブロックしていないか確認
+
+4. **開発環境でのデバッグ**
+   - ブラウザの開発者ツールでネットワークタブを確認
+   - サーバーログでエラーメッセージを確認
+   - `NODE_ENV=development` でより詳細なエラー情報を取得
+
+**よくあるエラーメッセージ:**
+
+- `メール送信設定が不完全です`: SMTP認証情報が設定されていません
+- `メールサーバーに接続できません`: ネットワーク接続またはSMTP設定に問題があります
+- `メール送信認証に失敗しました`: SMTP認証情報が間違っています
 
 ## カスタマイズ
 

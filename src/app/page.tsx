@@ -83,12 +83,36 @@ export default function Home() {
 						<a 
 							href="#projects" 
 							className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+							onClick={(e) => {
+								e.preventDefault()
+								const headerHeight = 88
+								const targetElement = document.getElementById('projects')
+								if (targetElement) {
+									const targetPosition = targetElement.offsetTop - headerHeight
+									window.scrollTo({
+										top: targetPosition,
+										behavior: 'smooth'
+									})
+								}
+							}}
 						>
 							作品を見る
 						</a>
 						<a 
 							href="#contact" 
 							className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+							onClick={(e) => {
+								e.preventDefault()
+								const headerHeight = 88
+								const targetElement = document.getElementById('contact')
+								if (targetElement) {
+									const targetPosition = targetElement.offsetTop - headerHeight
+									window.scrollTo({
+										top: targetPosition,
+										behavior: 'smooth'
+									})
+								}
+							}}
 						>
 							お問い合わせ
 						</a>

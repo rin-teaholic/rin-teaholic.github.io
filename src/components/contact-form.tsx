@@ -53,7 +53,15 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 		} catch (error) {
 			console.error('お問い合わせフォーム送信エラー:', error)
 			setSubmitStatus('error')
-			setErrorMessage('ネットワークエラーが発生しました。しばらく時間をおいて再度お試しください。')
+			
+			// より詳細なエラーメッセージを提供
+			if (error instanceof TypeError && error.message.includes('fetch')) {
+				setErrorMessage('ネットワークエラーが発生しました。インターネット接続を確認してください。')
+			} else if (error instanceof Error) {
+				setErrorMessage(`エラーが発生しました: ${error.message}`)
+			} else {
+				setErrorMessage('ネットワークエラーが発生しました。しばらく時間をおいて再度お試しください。')
+			}
 		} finally {
 			setIsSubmitting(false)
 		}

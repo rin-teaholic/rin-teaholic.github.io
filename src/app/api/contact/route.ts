@@ -19,6 +19,17 @@ export async function POST(request: NextRequest) {
 			)
 		}
 
+		// SMTP設定の確認
+		const smtpUser = process.env.SMTP_USER
+		const smtpPass = process.env.SMTP_PASS
+		if (!smtpUser || !smtpPass) {
+			console.error('SMTP認証情報が設定されていません')
+			return NextResponse.json(
+				{ error: 'メール送信設定が不完全です。管理者にお問い合わせください。' },
+				{ status: 500 }
+			)
+		}
+
 		// メール送信
 		await sendContactEmail({
 			...validatedData,
@@ -39,6 +50,7 @@ export async function POST(request: NextRequest) {
 	} catch (error) {
 		console.error('お問い合わせフォームエラー:', error)
 		
+		// Zodバリデーションエラー
 		if (error instanceof Error && error.name === 'ZodError') {
 			return NextResponse.json(
 				{ error: '入力内容に誤りがあります。確認してください。' },
@@ -46,16 +58,36 @@ export async function POST(request: NextRequest) {
 			)
 		}
 
-		// メール送信エラーの場合
-		if (error instanceof Error && (error.message.includes('SMTP') || error.message.includes('認証情報'))) {
+		// SMTP接続エラー
+		if (error instanceof Error && error.message.includes('ECONNREFUSED')) {
 			return NextResponse.json(
-				{ error: 'メール送信設定に問題があります。管理者にお問い合わせください。' },
+				{ error: 'メールサーバーに接続できません。ネットワーク接続を確認してください。' },
 				{ status: 500 }
 			)
 		}
 
+		// SMTP認証エラー
+		if (error instanceof Error && (error.message.includes('SMTP') || error.message.includes('認証情報') || error.message.includes('authentication'))) {
+			return NextResponse.json(
+				{ error: 'メール送信認証に失敗しました。管理者にお問い合わせください。' },
+				{ status: 500 }
+			)
+		}
+
+		// JSON解析エラー
+		if (error instanceof SyntaxError) {
+			return NextResponse.json(
+				{ error: 'リクエストデータの形式が正しくありません。' },
+				{ status: 400 }
+			)
+		}
+
+		// その他のエラー
 		return NextResponse.json(
-			{ error: 'サーバーエラーが発生しました。しばらく時間をおいて再度お試しください。' },
+			{ 
+				error: 'サーバーエラーが発生しました。しばらく時間をおいて再度お試しください。',
+				details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : 'Unknown error' : undefined
+			},
 			{ status: 500 }
 		)
 	}

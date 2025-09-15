@@ -20,14 +20,62 @@ export default function Navigation() {
 		}
 	}, [isMenuOpen])
 
+	// スムーズスクロールとヘッダーオフセット調整
+	const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+		e.preventDefault()
+		
+		// モバイルメニューを閉じる
+		setIsMenuOpen(false)
+		
+		// ヘッダーの高さを取得（固定ヘッダーの高さ）
+		const headerHeight = 88 // ヘッダーの高さ（py-6 + コンテンツ高さ）
+		
+		// 対象要素を取得
+		const targetElement = document.getElementById(targetId)
+		if (targetElement) {
+			// スクロール位置を計算（ヘッダーの高さ分オフセット）
+			const targetPosition = targetElement.offsetTop - headerHeight
+			
+			// スムーズスクロール
+			window.scrollTo({
+				top: targetPosition,
+				behavior: 'smooth'
+			})
+		}
+	}
+
 	return (
 		<>
 			{/* Desktop Navigation */}
 			<nav className="hidden md:flex space-x-8">
-				<a href="#about" className="text-gray-600 hover:text-gray-900">About</a>
-				<a href="#projects" className="text-gray-600 hover:text-gray-900">Projects</a>
-				<a href="#skills" className="text-gray-600 hover:text-gray-900">Skills</a>
-				<a href="#contact" className="text-gray-600 hover:text-gray-900">Contact</a>
+				<a 
+					href="#about" 
+					className="text-gray-600 hover:text-gray-900"
+					onClick={(e) => handleSmoothScroll(e, 'about')}
+				>
+					About
+				</a>
+				<a 
+					href="#projects" 
+					className="text-gray-600 hover:text-gray-900"
+					onClick={(e) => handleSmoothScroll(e, 'projects')}
+				>
+					Projects
+				</a>
+				<a 
+					href="#skills" 
+					className="text-gray-600 hover:text-gray-900"
+					onClick={(e) => handleSmoothScroll(e, 'skills')}
+				>
+					Skills
+				</a>
+				<a 
+					href="#contact" 
+					className="text-gray-600 hover:text-gray-900"
+					onClick={(e) => handleSmoothScroll(e, 'contact')}
+				>
+					Contact
+				</a>
 			</nav>
 
 			{/* Mobile menu button */}
@@ -64,28 +112,28 @@ export default function Navigation() {
 							<a 
 								href="#about" 
 								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-								onClick={() => setIsMenuOpen(false)}
+								onClick={(e) => handleSmoothScroll(e, 'about')}
 							>
 								About
 							</a>
 							<a 
 								href="#projects" 
 								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-								onClick={() => setIsMenuOpen(false)}
+								onClick={(e) => handleSmoothScroll(e, 'projects')}
 							>
 								Projects
 							</a>
 							<a 
 								href="#skills" 
 								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4 border-b border-gray-100"
-								onClick={() => setIsMenuOpen(false)}
+								onClick={(e) => handleSmoothScroll(e, 'skills')}
 							>
 								Skills
 							</a>
 							<a 
 								href="#contact" 
 								className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-6 py-4"
-								onClick={() => setIsMenuOpen(false)}
+								onClick={(e) => handleSmoothScroll(e, 'contact')}
 							>
 								Contact
 							</a>
