@@ -28,9 +28,40 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 
 	// EmailJSの初期化
 	useEffect(() => {
+		const isProduction = process.env.NODE_ENV === 'production'
+		const configStatus = {
+			SERVICE_ID: EMAILJS_CONFIG.SERVICE_ID ? '設定済み' : '未設定',
+			TEMPLATE_ID: EMAILJS_CONFIG.TEMPLATE_ID ? '設定済み' : '未設定',
+			PUBLIC_KEY: EMAILJS_CONFIG.PUBLIC_KEY ? '設定済み' : '未設定',
+			NODE_ENV: process.env.NODE_ENV,
+			isProduction
+		}
+		
+		console.log('EmailJS設定確認:', configStatus)
+		
+		// 本番環境での詳細ログ
+		if (isProduction) {
+			console.log('本番環境でのEmailJS設定:', {
+				SERVICE_ID_LENGTH: EMAILJS_CONFIG.SERVICE_ID?.length || 0,
+				TEMPLATE_ID_LENGTH: EMAILJS_CONFIG.TEMPLATE_ID?.length || 0,
+				PUBLIC_KEY_LENGTH: EMAILJS_CONFIG.PUBLIC_KEY?.length || 0,
+				HAS_SERVICE_ID: !!EMAILJS_CONFIG.SERVICE_ID,
+				HAS_TEMPLATE_ID: !!EMAILJS_CONFIG.TEMPLATE_ID,
+				HAS_PUBLIC_KEY: !!EMAILJS_CONFIG.PUBLIC_KEY
+			})
+		}
+		
 		if (EMAILJS_CONFIG.PUBLIC_KEY) {
+			console.log('EmailJS初期化開始')
 			emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY)
 			setIsEmailJSReady(true)
+			console.log('EmailJS初期化完了')
+		} else {
+			console.error('EmailJS PUBLIC_KEYが設定されていません')
+			const errorMsg = isProduction 
+				? 'EmailJS設定が不完全です。GitHub Secretsの設定を確認してください。'
+				: 'EmailJS設定が不完全です。環境変数を確認してください。'
+			setErrorMessage(errorMsg)
 		}
 	}, [])
 
@@ -119,6 +150,11 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 			{submitStatus === 'error' && (
 				<div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
 					{errorMessage}
+				</div>
+			)}
+			{!isEmailJSReady && (
+				<div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
+					EmailJSの初期化中です。環境変数が設定されていない場合は、設定を確認してください。
 				</div>
 			)}
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
